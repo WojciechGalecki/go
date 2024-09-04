@@ -20,5 +20,8 @@ func main() {
 	server.PUT("/events/:id", routes.UpdateEvent)
 	server.DELETE("/events/:id", routes.DeleteEvent)
 
+  server.POST("/signup", routes.Signup)
+  server.POST("/login", routes.Login)
+
 	server.Run(serverPort)
 }

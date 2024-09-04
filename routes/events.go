@@ -57,6 +57,7 @@ func CreateEvent(context *gin.Context) {
 		return
 	}
 
+  // TODO
 	event.ID = 1
 	event.UserID = 1
 

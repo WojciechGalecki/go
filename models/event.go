@@ -25,7 +25,13 @@ func (event Event) Save() error {
 
 	defer stmt.Close()
 
-	result, err := stmt.Exec(event.Name, event.Description, event.Location, event.DateTime, event.UserID)
+	result, err := stmt.Exec(
+		event.Name,
+		event.Description,
+		event.Location,
+		event.DateTime,
+		event.UserID,
+	)
 
 	if err != nil {
 		return err
@@ -105,23 +111,29 @@ func (event Event) Update() error {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(event.Name, event.Description, event.Location, event.DateTime, event.ID)
+	_, err = stmt.Exec(
+		event.Name,
+		event.Description,
+		event.Location,
+		event.DateTime,
+		event.ID,
+	)
 
 	return err
 }
 
 func (event Event) Delete() error {
-  query := "DELETE FROM events WHERE id = ?"
+	query := "DELETE FROM events WHERE id = ?"
 
-  stmt, err := db.DB.Prepare(query)
+	stmt, err := db.DB.Prepare(query)
 
-  if err != nil {
+	if err != nil {
 		return err
 	}
 
 	defer stmt.Close()
 
-  _, err = stmt.Exec(event.ID)
+	_, err = stmt.Exec(event.ID)
 
-  return err
+	return err
 }
