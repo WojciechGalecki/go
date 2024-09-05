@@ -2,26 +2,27 @@ package main
 
 import (
 	"example.com/app/db"
+	"example.com/app/middlewares"
 	"example.com/app/routes"
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	serverPort = ":8080"
-)
+const serverPort = ":8080"
 
 func main() {
 	db.InitDB()
 	server := gin.Default()
 
+    server.POST("/signup", routes.Signup)
+	server.POST("/login", routes.Login)
 	server.GET("/events", routes.GetEvents)
 	server.GET("/events/:id", routes.GetEvent)
-	server.POST("/events", routes.CreateEvent)
-	server.PUT("/events/:id", routes.UpdateEvent)
-	server.DELETE("/events/:id", routes.DeleteEvent)
 
-  server.POST("/signup", routes.Signup)
-  server.POST("/login", routes.Login)
+    authenticated := server.Group("/")
+    authenticated.Use(middlewares.Authenticate)
+	authenticated.POST("/events", routes.CreateEvent)
+	authenticated.PUT("/events/:id", routes.UpdateEvent)
+	authenticated.DELETE("/events/:id", routes.DeleteEvent)
 
 	server.Run(serverPort)
 }

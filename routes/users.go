@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"example.com/app/models"
+	"example.com/app/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,10 +36,10 @@ func Signup(context *gin.Context) {
 }
 
 func Login(context *gin.Context) {
-  var user models.User
+	var user models.User
 	err := context.ShouldBindJSON(&user)
 
-  if err != nil {
+	if err != nil {
 		context.JSON(
 			http.StatusBadRequest,
 			gin.H{"message": "Couldn't parse request data"},
@@ -46,9 +47,9 @@ func Login(context *gin.Context) {
 		return
 	}
 
-  err = user.ValidateCredentials()
+	err = user.ValidateCredentials()
 
-  if err != nil {
+	if err != nil {
 		context.JSON(
 			http.StatusUnauthorized,
 			gin.H{"message": "Couldn't authenticate user"},
@@ -56,7 +57,20 @@ func Login(context *gin.Context) {
 		return
 	}
 
-  context.JSON(
+	token, err := utils.GenerateToken(user.Email, user.ID)
+
+	if err != nil {
+		context.JSON(
+			http.StatusInternalServerError,
+			gin.H{"message": "Couldn't authenticate user"},
+		)
+		return
+	}
+
+	context.JSON(
 		http.StatusOK,
-		gin.H{"message": "Login successful"})
+		gin.H{
+			"message": "Login successful",
+			"token":   token,
+		})
 }

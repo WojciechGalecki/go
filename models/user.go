@@ -44,14 +44,14 @@ func (user User) Save() error {
 	return err
 }
 
-func (user User) ValidateCredentials() error {
-	query := "SELECT password FROM users WHERE email = ?"
+func (user *User) ValidateCredentials() error {
+	query := "SELECT id, password FROM users WHERE email = ?"
 
 	row := db.DB.QueryRow(query, user.Email)
 
 	var hashedPassword string
 
-	err := row.Scan(&hashedPassword)
+	err := row.Scan(&user.ID, &hashedPassword)
 
 	if err != nil {
 		return err

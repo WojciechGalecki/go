@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"example.com/app/middlewares"
 	"example.com/app/models"
 	"github.com/gin-gonic/gin"
 )
@@ -57,9 +58,8 @@ func CreateEvent(context *gin.Context) {
 		return
 	}
 
-  // TODO
-	event.ID = 1
-	event.UserID = 1
+	userId := context.GetInt64(middlewares.UserIdKey)
+	event.UserID = userId
 
 	err = event.Save()
 
@@ -161,7 +161,7 @@ func DeleteEvent(context *gin.Context) {
 		return
 	}
 
-  context.JSON(
+	context.JSON(
 		http.StatusOK,
 		gin.H{"message": "Event deleted"},
 	)
