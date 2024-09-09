@@ -29,11 +29,11 @@ func InitDB() {
 
 func createTables() {
 	createUsersTableQuery := `
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL 
-  )`
+  	CREATE TABLE IF NOT EXISTS users (
+    	id INTEGER PRIMARY KEY AUTOINCREMENT,
+    	email TEXT NOT NULL UNIQUE,
+    	password TEXT NOT NULL 
+  	)`
 	_, err := DB.Exec(createUsersTableQuery)
 
 	if err != nil {
@@ -41,18 +41,33 @@ func createTables() {
 	}
 
 	createEventsTableQuery := `
-  CREATE TABLE IF NOT EXISTS events (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    description TEXT NOT NULL,
-    location TEXT NOT NULL,
-    date_time TEXT NOT NULL,
-    user_id INTEGER,
-    FOREIGN KEY(user_id) REFERENCES users(id)
-  )`
+  	CREATE TABLE IF NOT EXISTS events (
+    	id INTEGER PRIMARY KEY AUTOINCREMENT,
+    	name TEXT NOT NULL,
+    	description TEXT NOT NULL,
+    	location TEXT NOT NULL,
+    	date_time TEXT NOT NULL,
+    	user_id INTEGER,
+    	FOREIGN KEY(user_id) REFERENCES users(id)
+  	)`
 	_, err = DB.Exec(createEventsTableQuery)
 
 	if err != nil {
 		panic("Couldn't create events table")
+	}
+
+	createRegistrationsTableQuery := `
+	CREATE TABLE IF NOT EXISTS registrations (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		event_id INTEGER,
+		user_id INTEGER,
+		FOREIGN KEY(event_id) REFERENCES events(id),
+		FOREIGN KEY(user_id) REFERENCES users(id)
+	)`
+
+	_, err = DB.Exec(createRegistrationsTableQuery)
+
+	if err != nil {
+		panic("Couldn't create registrations table")
 	}
 }

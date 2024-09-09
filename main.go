@@ -23,6 +23,8 @@ func main() {
 	authenticated.POST("/events", routes.CreateEvent)
 	authenticated.PUT("/events/:id", routes.UpdateEvent)
 	authenticated.DELETE("/events/:id", routes.DeleteEvent)
+    authenticated.POST("/events/:id/register", routes.RegisterForEvent)
+    authenticated.DELETE("/events/:id/register", routes.CancelRegistration)
 
 	server.Run(serverPort)
 }
